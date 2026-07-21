@@ -3,7 +3,7 @@ import GameBoard from './components/GameBoard.jsx';
 import { useState } from "react";
 import Log from './components/Log.jsx';
 import { WINNING_COMBINATIONS } from '/winning-combinations.js';
-
+import GameOver from './components/GameOver.jsx';
 
 
 const initialGameBoard = [
@@ -32,7 +32,7 @@ function App() {
 
   const activePlayer = deriveActivePlayer(gameTurns);
 
-  let gameBoard = initialGameBoard;
+  let gameBoard = [...initialGameBoard.map(array => [...array])];//deep copy of the initial game board to avoid mutating the original array, with nested arrays 
 
   for (const turn of gameTurns) {
 
@@ -63,7 +63,7 @@ function App() {
 
 
 
-
+  const hasDraw = gameTurns.length === 9 && !winner;
 
   function handleSelectSquare(rowIndex, colIndex) {
     // setActivePlayer((curActivePlayer) => curActivePlayer === "X" ? "O" : "X");
@@ -79,13 +79,15 @@ function App() {
       ]; // yeni hamleyi obje ile oluşturduk. yeni hamle en üstte görünecek şekilde dizinin başına ekledik.
       // önceki hamleleri tutar
       return updatedTurns;
-    })
+    });
 
 
 
   }
 
-
+  function handleRestard() {
+    setGameTurns([]);
+  }
 
   return (
     <main>
@@ -97,7 +99,7 @@ function App() {
 
 
         </ol>
-        {winner && <p> You won, {winner}!</p>}
+        {(winner || hasDraw) && <GameOver winner={winner} onRestart={handleRestard} />}
         <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard} />
 
       </div>
