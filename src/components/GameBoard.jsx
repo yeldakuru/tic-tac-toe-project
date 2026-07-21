@@ -7,29 +7,41 @@ const initialGameBoard = [
     [null, null, null]
 ];
 
-export default function GameBoard({ onSelectSquare, activePlayerSymbol }) {
+export default function GameBoard({ onSelectSquare, turns }) {
 
-    const [gameBoard, setGameBoard] = useState(initialGameBoard);
+    let gameBoard = initialGameBoard;
 
-    function handleSelectSquare(rowIndex, colIndex) {
-        setGameBoard((prevGameBoard) => {
+    for (const turn of turns) {
 
-            const updatedBoard = [...prevGameBoard.map(innerArray => [...innerArray])];//yeni bir dizi oluşturuyor. innerarray ile satırları da kopyalıyoruz.
-            updatedBoard[rowIndex][colIndex] = activePlayerSymbol; //yeni dizinin ilgili hücresine aktif oyuncunun sembolünü atıyor.
-            return updatedBoard;//yeni diziyi döndürüyor
-        });
+        const { square, player } = turn;
+        const { row, col } = square;
 
-        onSelectSquare();
-
-
+        gameBoard[row][col] = player;
     }
+
+
+
+    // const [gameBoard, setGameBoard] = useState(initialGameBoard);
+
+    // function handleSelectSquare(rowIndex, colIndex) {
+    //     setGameBoard((prevGameBoard) => {
+
+    //         const updatedBoard = [...prevGameBoard.map(innerArray => [...innerArray])];//yeni bir dizi oluşturuyor. innerarray ile satırları da kopyalıyoruz.
+    //         updatedBoard[rowIndex][colIndex] = activePlayerSymbol; //yeni dizinin ilgili hücresine aktif oyuncunun sembolünü atıyor.
+    //         return updatedBoard;//yeni diziyi döndürüyor
+    //     });
+
+    //     onSelectSquare();
+
+
+    // }
 
     return <ol id="game-board">
         {gameBoard.map((row, rowIndex) => <li key={rowIndex} >
 
             <ol>
                 {row.map((playerSymbol, colIndex) => <li key={colIndex}>
-                    <button onClick={() => handleSelectSquare(rowIndex, colIndex)}>
+                    <button onClick={() => onSelectSquare(rowIndex, colIndex)} disabled={playerSymbol !== null}>
                         {playerSymbol}
                     </button>
                 </li>)}
