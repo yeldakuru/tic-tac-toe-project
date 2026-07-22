@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Player({ initialName, symbol, isActive }) {
+export default function Player({ initialName, symbol, isActive, onChangeName }) {
     const [playerName, setPlayerName] = useState(initialName);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -8,6 +8,9 @@ export default function Player({ initialName, symbol, isActive }) {
 
         //setIsEditing(!isEditing); bu yavaş yöntemdir. Çünkü önceki state değerine bağlı olarak yeni state değerini belirler. Bu nedenle, önceki state değerini kullanmak için bir fonksiyon kullanmak daha güvenlidir.
         setIsEditing((editing) => !editing);
+        if (isEditing) {
+            onChangeName(symbol, playerName);
+        }
     }
 
     function handleChange(e) { //e ya da event yaygın olarak kullanılır
